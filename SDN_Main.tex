@@ -1,0 +1,106 @@
+\documentclass[10pt]{IEEEtran}
+
+%\renewcommand{\baselinestretch}{1.13}
+
+%% INFOCOM 2010 addition:
+\makeatletter
+\def\ps@headings{%
+\def\@oddhead{\mbox{}\scriptsize\rightmark \hfil \thepage}%
+\def\@evenhead{\scriptsize\thepage \hfil \leftmark\mbox{}}%
+\def\@oddfoot{}%
+\def\@evenfoot{}}
+
+\makeatother
+
+% \pagestyle{empty}
+\usepackage{amssymb,amsmath}
+\usepackage{amsfonts}
+\usepackage{array}
+\usepackage{algorithmicx}
+\usepackage[ruled,commentsnumbered]{algorithm2e}
+\usepackage{subfigure}
+\usepackage{mathrsfs}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{eurosym}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{epstopdf}
+\usepackage{epsfig}
+\usepackage{stmaryrd}
+\usepackage{multirow,url}
+\usepackage{color,cite}
+\usepackage{slashbox}
+\usepackage{amsthm}
+\usepackage{bm}
+
+\bibliographystyle{IEEEtran}
+
+%\usepackage{tabular}
+\usepackage{multirow}
+\usepackage{caption}
+
+\begin{document}
+
+% paper title
+\title{Extending SDN Control Through Programmable Mobile Devices}
+
+
+% \vspace{-5mm}
+\author{\IEEEauthorblockN{Konstantinos Poularakis$^\ddagger$, Qiaofeng Qin$^\ddagger$, Erich Nahum$^\diamond$, Miguel Rio$^{*}$, Leandros Tassiulas$^\ddagger$}
+\\
+\IEEEauthorblockA{$^\ddagger${Department of Electrical Engineering and Institute for Network Science, Yale University, USA}
+\\
+{$^{\diamond}${IBM T. J. Watson Research Center, USA}}
+}
+\\
+{$^{*}${Department of Electrical and Electronic Engineering, University College London, UK}}
+}
+ \vspace{-5mm}
+
+\maketitle
+
+\thispagestyle{empty}
+
+\begin{abstract}
+Today, Software Defined Network (SDN) architectures and applications are revolutionizing the way wired networks are built and operate. However, little is known about the potential of this disruptive technology in wireless mobile networks. In fact, SDN is based on a centralized network control principle, while existing mobile network protocols give emphasis on the distribution of network resources and their management. Therefore, it is challenging to apply SDN ideas in the context of mobile networks. In this paper, we propose methods to overcome these challenges and make SDN more suitable for the mobile environment. Our main idea is to combine centralized SDN and distributed control in a hybrid design that takes the best of the two paradigms; (i) global network view and control programmability of SDN and (ii) robustness of distributed protocols. We discuss the pros and cons of each method and highlight them in an SDN prototype implementation built using off-the-shelf mobile devices.
+\end{abstract}
+
+\input{Introduction.tex}
+
+
+
+
+
+\begin{thebibliography}{99}
+
+\bibitem{sdn-survey} D. Kreutz, F. Ramos, P. Esteves Verissimo, C. Esteve Rothenberg, S. Azodolmolky, S. Uhlig, ``Software-Defined Networking: A Comprehensive Survey'', \emph{in Proc. IEEE, vol. 103, no. 1, pp. 14-76}, 2015.
+
+\bibitem{sdn-b4} S. Jain, A. Kumar, S. Mandal, J. Ong, L. Poutievski, A. Singh, S. Venkata, J. Wanderer, J. Zhou, M. Zhu, J. Zolla, U. Hlzle, S. Stuart, A. Vahdat, ``B4: Experience with a Globally-Deployed Software Defined WAN'', \emph{in Proc. of ACM Sigcomm}, 2013.
+
+\bibitem{manet-survey} L. Abusalah, A. Khokhar, M. Guizani, ``A Survey of Secure Mobile Ad Hoc Routing Protocols'', \emph{IEEE Communications Surveys \& Tutorials, vol. 19, no. 4, pp. 78-93}, 2008.
+
+\bibitem{routing-anomalies} S. Vissicchio, L. Cittadini, O. Bonaventure, G. G. Xie, L. Vanberer, ``On the Co-Existence of Distributed and Centralized Routing Control-Planes'', \emph{in Proc. IEEE Infocom}, 2015.
+
+\bibitem{ovs} Open vSwitch, \url{http://openvswitch.org}
+
+
+\bibitem{syrivelis} D. Syrivelis, G. Iosifidis, D. Delimpasis, K. Chounos, T. Korakis, L. Tassiulas, ``Bits \& Coins: Supporting Collaborative Consumption of Mobile Internet'', \emph{in Proc. of IEEE Infocom}, 2015.
+
+%\bibitem{openstate} G. Bianchi, M. Bonola, A. Capone, C. Cascone, ``OpenState: Programming Platform-independent Stateful OpenFlow Applications Inside the Switch'', \emph{ACM SIGCOMM Computer Communication Review}, vol. 44, no. 2, April 2014, pp. 44–51.
+
+%\bibitem{softcell} X. Jin, L. Erran Li, L. Vanbever, J. Rexford, ``SoftCell: Taking Control of Cellular Core Networks'', \emph{in Proc. of ACM CoNEXT}, 2013.
+
+%\bibitem{softran} A. Gudipati, D. Perry, L.E. Li, S. Katti, ``SoftRAN: Software Defined Radio Access Network'', \emph{in Proc. of ACM HotSDN}, 2013.
+
+%\bibitem{openradio} M. Bansal, J. Mehlman, S. Katti, P. Levis, ``Openradio: A Programmable Wireless Dataplane'', \emph{in Proc. of ACM HotSDN}, 2012.
+
+%\bibitem{sdn-gerla} J. Nobre, D. Rosario, C. Both, E. Cerqueira, M. Gerla ``Toward Software-defined Battlefield Networking'', \emph{IEEE Communications Magazine}, vol. 54, no. 10, October 2016, pp. 152-157.
+
+
+\end{thebibliography}
+
+
+\end{document}
+

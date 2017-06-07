@@ -1,0 +1,112 @@
+
+\section{Introduction} \label{section:introduction}
+
+\subsection{Motivation}
+
+%1. sdn general
+Software Defined Network (SDN) technology promises to advance communication networks to a whole new level of programmability, which will allow to manage network resources on demand and at a granular level, and offer more flexible services to users. The main concept of SDN is to detach network control functions (control plane) from data forwarding devices (data plane) and shift them to a logically centralized entity with global network view, the controller. Up to date, the vast majority of related studies refer to wired infrastructures, i.e., ISP networks and data centers ~\cite{sdn-survey}. Little is known today about the potential of SDN in wireless mobile networks.
+
+%2. mobile sdn challenges
+Mobile networks can benefit from SDN, in a similar way that this disruptive technology revolutionized data center and wired networks~\cite{sdn-b4}. 
+However, a major challenge that holds back the SDN penetration in mobile networks is their high level of volatility and the difficulty in establishing reliable communication between the control and data planes. For example, if the SDN controller loses connectivity to the mobile nodes, it will be impossible to reconfigure them, resulting in outdated (and clearly suboptimal) routing policies. Even if the controller is reachable, frequent network updates in the mobile network can take a long time and overload the controller.
+
+%3. fully centralized is the reason sdn will not work in mobile networks
+The aforementioned problems are mainly because of the centralization of all the network control functions into the SDN controller. This centralized approach works well in wired networks which are relatively static and, therefore, the communication between the controller and the data plane nodes is much more stable and reliable than in the mobile counterpart. However, this approach needs to be revisited in the context of highly mobile networks.
+
+%4. at the same time distributed protocols are robust, can we combine them?
+At the same time, we note that distributed routing protocols, such as AODV and OLSR~\cite{manet-survey}, have been shown to work well in mobile networks. These protocols can be used for network discovery and routing in presence of network failures and mobility, providing a robust network architecture. Their main limitation compared to SDN is their lack of network view and programmability to realize end-to-end network policies. All the above mean that \emph{it would be beneficial to design a network architecture that combines the benefits of the two paradigms; global network view and programmability of SDN and robustness of distributed routing protocols.}
+
+\subsection{Methodology}
+
+%5. we propose hybrid - between centralized and distributed 
+Motivated by the above discussion, we revisit the strict separation between control and data planes dictated by SDN. 
+We put forward a \emph{hybrid control design} in which network control is split between the SDN controller and the (data plane) mobile devices. 
+That is, we allow the mobile devices to make their own data forwarding decisions, bypassing the SDN controller.
+
+%6. routing anomalies
+At this point, we need to emphasize that the co-existence of different forwarding planes in the same network poses risks for fault-free routing, such as forwarding loops and blackholes~\cite{routing-anomalies}. Therefore, we need to combine SDN and distributed forwarding planes in a way that ensures that the packets will reach their destinations in reasonable time and without faults.
+
+%7. ways to realize hybrid control
+In this paper, we propose three alternative methods to combine centralized SDN and distributed network control planes. 
+
+\subsubsection{Method 1: Migration to a distributed protocol.} ~\\
+In this method, a part of the mobile network nodes can decide to stop following the SDN forwarding rules and migrate to a distributed routing protocol. This can happen for example when the nodes in a certain region of the network experience rapid network changes and the SDN controller cannot reconfigure them on time. By running a distributed routing protocol, the nodes in that region can adapt to the changes faster than the SDN controller would do. However, deciding which part of the network to migrate and when, as well as the interaction between the two control planes are non-trivial problems.
+
+%8. second way
+\subsubsection{Method 2: Clusters running distributed protocols.} ~\\
+In the second method, the mobile network is partitioned into clusters and a distributed protocol runs in each cluster independently from the others.
+These distributed protocols can route the traffic within the boundaries of a cluster, but they cannot make any decisions outside the cluster. 
+The centralized SDN controller can be used to alter the behavior of the distributed protocols so as to control the traffic exchanged between nodes belonging to different clusters. However, how to design the clustering is an open question.
+
+%9. third way
+\subsubsection{Method 3: Proactive distribution of backup rules.} ~\\ 
+In this method, all the nodes run the SDN protocol, and therefore they can be configured by the SDN controller. 
+To realize a distributed control protocol, we proactively distribute backup forwarding rules to the mobile nodes which describe what actions to take and under what conditions.
+For example, if a certain network link fails the node on one of its endpoints can be advised to route packets using a different link. 
+However, the storage space of the nodes is limited, and therefore it may not be possible to store backup rules for all possible link failure scenarios.
+
+%The feasibility of this approach has been shown by our recent work in \cite{syrivelis}.
+
+%10. we alter node architecture
+To realize the above hybrid control architectures, we need to install to each device a \emph{local software agent} which can alter the device's forwarding behavior without relying on the SDN protocol. The local agents run mechanisms to detect changes in the network and new flows, and communicate with each other to exchange their observations of the network conditions.
+This way we can make the node to bypass the SDN controller and run a distributed protocol.
+
+%11. prototype
+To highlight the benefits of our approach, we implement an SDN prototype of our architecture and execute experiments measuring the performance and limitations.
+Our prototype implementation consists of common smartphone and laptop devices which are set up with OpenVSwitch (OvS) OpenFlow datapath~\cite{ovs}. 
+We perform the experiments for different network topologies and using multiple wireless interfaces (WiFi and Bluetooth). We find that by pushing a certain level of control logic to the mobile devices can provide a multi-fold reduction in failure reaction time compared to the conventional (fully-centralized) OpenFlow system where the controller responds to all failures. The gains highly depend on the quality of the wireless channel between the controller and the mobile devices.
+
+
+
+%The proposed system can be also used to enable sophisticated routing policies among the mobile devices, even when the SDN controller is not reachable. Indeed, the mobile devices can be programmed to smartly route traffic based on high-level attributes of the network users and flows, such as the level of trust of the owner of the device or the data cached in the memory of the device. These forward-looking network applications can be critical for heterogeneous networks involving organizations with different objectives and constraints, especially in mobile network environments without fixed infrastructure.
+
+
+%\begin{figure}[t]
+%	\begin{center}
+%		\includegraphics[scale=0.38]{figures/figure1.pdf}
+%\vspace{-1mm}
+%		\caption{A mobile edge network that combines centralized SDN and distributed control planes.}
+%		\label{fig:example}
+%	\end{center}
+%\vspace{-2mm}
+%\end{figure}
+
+%%4. motivating example
+%To explain the potential benefits of such a hybrid architecture, which combines SDN and distributed network control, we use the following example. Consider the network shown in Figure \ref{fig:example}. The SDN controller leverages its global network view to compute end-to-end routing policies and fill in the forwarding tables of the nine nodes. The nodes can also make forwarding decisions in a distributed manner, bypassing the controller. This can be realized by installing \emph{local software agents} at the nodes which manage \emph{local forwarding tables}, in addition to the SDN forwarding tables. The agents can selectively match packets between the local and SDN forwarding tables based on the \emph{observed network state}. In the example, if the agent of node 2 detects a failure of the link to node 3, it can dynamically decide to route the packets destined to node 4 towards node 6 or 8 instead of node 3. To realize a high level policy (e.g., direct traffic through a middlebox), the agent should select node 8. This handing over of control authority from the controller to the nodes can lead to faster reaction to network failures, and more importantly enable policy-aware traffic rerouting even when the controller is not reachable.
+%
+%%5. tradeoffs
+%The local agents of the nodes need to communicate with each other to synchronize their views of the network state. For the example in Figure \ref{fig:example}, if link (6,4) fails, the agent of node 6 needs to notify the agent of node 2 that the respective path is no longer available, so as to select a different path. Intuitively, the more state messages are exchanged between the agents, the higher becomes the portion of network failures that can be managed directly in the data plane. However, a high number of messages will result in high communication overhead. Thus, there must be a limitation on the number of state messages exchanged. Having determined which messages will be exchanged, the next step is to decide which forwarding rules to store at each local table and the conditions under which an agent will select the rules in the local over the SDN forwarding table. It is well known that the co-existence of different forwarding planes in the same network poses risks for fault-free routing, such as forwarding loops~\cite{vanberer-infocom15}. Therefore, we need to combine SDN and distributed forwarding planes in a way that ensures that the packets will reach their destinations in reasonable time and without faults.
+
+%%6. technical questions/optimization
+%It is clear from the above that there are several key questions we need to answer in a rigorous fashion, so as to be able to implement a hybrid SDN architecture that is suitable for the mobile edge network. In particular:
+%\begin{enumerate}
+%
+%\item \emph{Which agents should communicate with each other, and how often? What information should be exchanged? What parameters of the network affect the efficiency of these decisions?}.
+%
+%\item \emph{Which exact forwarding rules should be stored in each local table? When should an agent select the forwarding rules in the local table and when in the SDN table?}
+%
+%\end{enumerate}
+
+%%7. analysis of our approach
+%\textbf{Methodology and Contributions}. In this paper we follow a systematic methodology in order to answer the above questions. We propose and design a hybrid SDN architecture in which data plane nodes can make distributed forwarding decisions according to the observed network state, e.g., reroute traffic to alternative paths upon detection of network link failures. To realize this, we equip nodes with local agents that can detect network failures and maintain network states. Then, we program the nodes to dynamically select one forwarding table over the other according to the observed network state. Our architecture builds on OpenState~\cite{openstate} and FAST~\cite{fast}, which are OpenFlow extensions supporting stateful data forwarding. We also model the problems of tuning the message exchange between the local agents and storing the forwarding rules in the local tables with the goal of maximizing the number of flows configured by the agents. We show the high complexity of these problems and propose algorithms with approximation guarantees using the theory of submodular functions~\cite{subsub}.
+%
+%%8. prototype implementation
+%We evaluate the performance of the proposed algorithms on real wireless network topologies. The results indicate that fewer than three messages per node need to be exchanged on average to support a link failure rate of up to $10\%$. As a proof-of-concept, we implement a hybrid SDN prototype and perform experiments. Our prototype implementation consists of off-the-shelf mobile devices (laptops and Android smartphones) which are set up with OpenVSwitch (OvS) OpenFlow datapath~\cite{ovs}. Using this prototype implementation, we explore how quickly the devices can react to wireless link failures and compare with the conventional OpenFlow implementation in which a remote controller manages all link failures.
+
+
+%9. contributions
+The contributions of this work are summarized as follows:
+\begin{itemize}
+
+\item \emph{Hybrid Control Design}. We propose hybrid SDN architectures that can provide the right balance between centralized and distributed network control in mobile edge networks. Our designs equip nodes with software agents that allow them to remain operational even when connectivity to the SDN controller is lost.
+
+\item \emph{Summary of Challenges and Comparison}. We discuss the key challenges in realizing these architectures and compare them each other.
+
+%present a network model and a framework to optimally tune the network state exchange between the local agents and store the forwrding rules. Our goal is to maximize the number of flows that can be configured by the agents, bypassing the SDN controller. We show the high complexity of these problems and present approximation algorithms using the theory of submodular functions.
+
+\item \emph{Proof-of-Concept Prototype Implementation.} We implement a hybrid SDN prototype and execute experiments measuring the performance and limitations. We find that the hybrid SDN system can provide a multi-fold reduction in failure reaction time compared to the conventional (fully-centralized) OpenFlow system for a range of experiments. The gains depend on the quality of the wireless channel between the controller and the mobile devices.
+
+\end{itemize}
+
+The rest of the paper is organized as follows. 
+%After presenting some background on SDN in Section \ref{section:background}, we describe the proposed hybrid SDN architecture in Section \ref{section:design}. Section \ref{section:system_model} describes the system model and addresses the problem of tuning the message exchange between the local agents in the network. Section \ref{section:approximation} describes how to store the forwarding rules to the local tables managed by the agents. Section \ref{section:evaluation} presents the trace-driven evaluation of the algorithms and the prototype implementation. We review our contribution compared to the related works in Section \ref{section:related_work} and conclude our work in Section \ref{section:conclusion}.
